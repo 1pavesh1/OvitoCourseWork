@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${ad.name}">Объявление</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/styleAds.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/MainSearchPage'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <button th:unless="${user.admin}" onclick="location.href='/BasketPage'" class="nav-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    Корзина
+                </button>
+                <button onclick="location.href='/ProfilePage'" class="nav-button">
+                    <i class="fas fa-user"></i>
+                    Профиль
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="ad-view-section">
+        <div class="ad-images">
+            <!-- Галерея изображений -->
+            <div class="image-gallery">
+                <!-- Основное изображение -->
+                <div class="main-image-container">
+                    <div th:if="${totalImages > 0}">
+                        <img th:src="@{'/ads/images/' + ${ad.idAds} + '/' + ${currentImageIndex}}"
+                             alt="Фото товара"
+                             class="main-image">
+                    </div>
+
+                    <!-- Навигационные стрелки -->
+                    <div class="nav-arrows" th:if="${totalImages > 1}">
+                        <a th:with="prevIndex=${currentImageIndex == 0 ? totalImages - 1 : currentImageIndex - 1}"
+                           th:href="@{'/ads/' + ${ad.idAds} + '?imageIndex=' + ${prevIndex}}"
+                           class="nav-arrow left-arrow">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        <a th:with="nextIndex=${currentImageIndex == totalImages - 1 ? 0 : currentImageIndex + 1}"
+                           th:href="@{'/ads/' + ${ad.idAds} + '?imageIndex=' + ${nextIndex}}"
+                           class="nav-arrow right-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Миниатюры -->
+                <div th:if="${totalImages > 1}" class="thumbnails">
+                    <a th:each="i : ${#numbers.sequence(0, totalImages - 1)}"
+                       th:href="@{'/ads/' + ${ad.idAds} + '?imageIndex=' + ${i}}"
+                       th:classappend="${i == currentImageIndex} ? 'active' : ''"
+                       class="thumbnail">
+                        <img th:src="@{'/ads/images/' + ${ad.idAds} + '/' + ${i}}">
+                    </a>
+                </div>
+
+                <!-- Миниатюры -->
+                <div th:if="${totalImages > 1}" class="thumbnails">
+                    <a th:each="i : ${#numbers.sequence(0, totalImages - 1)}"
+                       th:href="@{'/ads/' + ${ad.idAds} + '?imageIndex=' + ${i}}"
+                       th:classappend="${i == currentImageIndex} ? 'active' : ''"
+                       class="thumbnail">
+                        <img th:src="@{'/ads/images/' + ${ad.idAds} + '/' + ${i}}">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-details">
+
+            <div class="ad-actions-icons"
+                 th:if="${user != null and (user.getIdUser() == ad.getIdUser() or user.admin)}">
+                <a th:href="@{/ads/edit/{id}(id=${ad.getIdAds()})}" class="edit-icon" title="Редактировать">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <form th:action="@{/ads/{id}(id=${ad.getIdAds()})}" method="POST" style="display: inline;">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="delete-icon" title="Удалить"
+                            onclick="return confirm('Вы уверены, что хотите удалить это объявление?')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+
+            <h1 th:text="${ad.name}">Название товара</h1>
+            <div class="ad-price" th:text="${#numbers.formatDecimal(ad.price, 0, 'COMMA', 0, 'POINT')} + ' ₽'">Цена</div>
+
+            <div class="ad-meta-container">
+                <div class="ad-meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span th:text="${ad.address}">Адрес</span>
+                </div>
+                <div class="ad-meta-item">
+                    <i class="far fa-calendar-alt"></i>
+                    <span th:text="${#temporals.format(ad.datePlacement, 'dd.MM.yyyy')}">Дата размещения</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <form th:action="@{/ads/{id}/add-to-cart(id=${ad.getIdAds()})}" method="post" style="display:inline;">
+                    <button type="submit"
+                            class="action-button add-to-cart"
+                            th:classappend="${user == null or !canBuy} ? ' disabled' : ''"
+                            th:disabled="${user == null or !canBuy}">
+                        <i class="fas fa-cart-plus"></i>
+                        Добавить в корзину
+                    </button>
+                </form>
+            </div>
+
+            <div class="ad-description">
+                <h3>Описание</h3>
+                <p th:text="${ad.description} ?: 'Нет описания'">Описание товара</p>
+            </div>
+
+            <div class="ad-status" th:classappend="${ad.statusProduct} ? 'available' : 'sold'">
+                <i th:class="${ad.statusProduct} ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+                <span th:text="${ad.statusProduct} ? 'В продаже' : 'Продано'"></span>
+            </div>
+
+            <div class="seller-contact">
+                <form th:action="@{/ads/{id}/show-phone(id=${ad.getIdAds()})}" method="post">
+                    <button type="submit" class="contact-button" th:if="${phone == null}">
+                        Показать телефон
+                    </button>
+                    <button type="button"
+                            class="action-button add-to-cart seller-phone-btn"
+                            th:if="${phone != null}" style="cursor:default;">
+                        <i class="fas fa-phone"></i>
+                        <span th:text="${phone}">+7 (XXX) XXX-XX-XX</span>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+    <div th:if="${warning}" class="warning-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${warning}"></span>
+    </div>
+</main>
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/MainSearchPage'">Ovito</div>
+            <p class="footer-desc">Ovito — ваш онлайн-маркетплейс объявлений. Покупайте и продавайте легко!</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/MainSearchPage">Главная</a>
+                <a href="/AddAdsPage">Разместить объявление</a>
+                <a href="/ProfilePage">Профиль</a>
+                <a href="/BasketPage">Корзина</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

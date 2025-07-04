@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали заказа</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/styleShowOrder.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/MainSearchPage'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <button onclick="location.href='/BasketPage'" class="nav-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    Корзина
+                </button>
+                <button class="nav-button active" onclick="location.href='/ProfilePage'">
+                    <i class="fas fa-user"></i>
+                    Профиль
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="profile-section">
+
+        <div class="order-details-container">
+            <h2 class="order-title">Детали заказа #<span th:text="${order.idOrder}"></span></h2>
+
+            <div class="order-info-section">
+                <div class="order-info-row">
+                    <span class="order-info-label">Дата доставки:</span>
+                    <span class="order-info-value" th:text="${#temporals.format(order.dateDelivery, 'dd.MM.yyyy')}">01.01.2023</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">Адрес доставки:</span>
+                    <span class="order-info-value" th:text="${order.address}">г. Москва, ул. Примерная, д. 1</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">Способ доставки:</span>
+                    <span class="order-info-value" th:text="${delivery?.name} ?: 'Не указан'">Курьерская доставка</span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">Стоимость заказа:</span>
+                    <span class="order-info-value" th:text="${#numbers.formatDecimal(order.costOrder, 0, 'COMMA', 0, 'POINT')} + ' ₽'">5 000 ₽</span>
+                </div>
+            </div>
+
+            <div class="order-product-section">
+                <h3 class="order-product-title">Товар в заказе</h3>
+                <div class="order-product-card">
+                    <div class="order-product-image">
+                        <img th:if="${ad.getPhotoProducts() != null}"
+                             th:src="@{'/ads/image/' + ${ad.idAds}}"
+                             alt="Фото товара">
+                        <div th:unless="${ad.getPhotoProducts() != null}" class="order-no-photo">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="order-product-details">
+                        <h4 class="order-product-name" th:text="${ad.name}">Название товара</h4>
+                        <p class="order-product-description" th:text="${ad.description}">Описание товара</p>
+                        <div class="order-product-price" th:text="${#numbers.formatDecimal(ad.price, 0, 'COMMA', 0, 'POINT')} + ' ₽'">5 000 ₽</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/MainSearchPage'">Ovito</div>
+            <p class="footer-desc">Ovito — ваш онлайн-маркетплейс объявлений. Покупайте и продавайте легко!</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/MainSearchPage">Главная</a>
+                <a href="/AddAdsPage">Разместить объявление</a>
+                <a href="/ProfilePage">Профиль</a>
+                <a href="/BasketPage">Корзина</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

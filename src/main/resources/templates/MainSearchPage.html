@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/styleMain.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/MainSearchPage'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <button th:unless="${user.admin}" onclick="location.href='/BasketPage'" class="nav-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    Корзина
+                </button>
+                <button onclick="location.href='/ProfilePage'" class="nav-button">
+                    <i class="fas fa-user"></i>
+                    Профиль
+                </button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <form action="/MainSearchPage" method="get" class="search-form">
+                <input type="text" name="searchQuery" class="search-input"
+                       placeholder="Поиск среди 100 млн+ объявлений"
+                       th:value="${searchQuery}">
+                <button type="submit" class="search-button">Найти</button>
+            </form>
+            <button class="add-button"
+                    th:classappend="${!isProfileComplete} ? ' disabled' : ''"
+                    th:disabled="${!isProfileComplete}"
+                    th:onclick="${isProfileComplete} ? 'location.href=\'/AddAdsPage\'' : null">
+                + Разместить объявление
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="categories">
+        <h2>Все категории</h2>
+        <div class="category-list">
+            <div class="category-item" th:each="category : ${categories}"
+                 th:onclick="'location.href=\'/MainSearchPage?categoryId=' + ${category.idCategory} + '\''">
+                <div class="category-icon">
+                    <i class="fas" th:classappend="'fa-' + ${@iconService.getIconForCategory(category.name)}"></i>
+                </div>
+                <span th:text="${category.name}">Категория</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="filters">
+        <form action="/MainSearchPage" method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="category">Категория:</label>
+                <select id="category" name="categoryId">
+                    <option value="">Все категории</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.idCategory}"
+                            th:text="${category.name}"
+                            th:selected="${selectedCategoryId == category.idCategory}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="city">Город:</label>
+                <input type="text" id="city" name="city"
+                       th:value="${selectedCity}"
+                       placeholder="Введите город">
+            </div>
+
+            <button type="submit" class="filter-button">Применить фильтры</button>
+            <button type="button" class="filter-button" onclick="location.href='/MainSearchPage'">Сбросить</button>
+        </form>
+    </section>
+
+    <section class="ads-container">
+        <div class="ad-item" th:each="ad : ${adsList}" th:onclick="'location.href=\'/ads/' + ${ad.idAds} + '\''" style="cursor: pointer;">
+            <div class="ad-image">
+                <!-- Проверяем, есть ли фото -->
+                <img th:if="${ad.getPhotoProducts() != null}"
+                     th:src="@{'/ads/image/' + ${ad.idAds}}"
+                     alt="Фото товара"
+                     style="width: 100%; height: 180px; object-fit: cover;">
+                <!-- Если фото нет, показываем заглушку -->
+                <div th:unless="${ad.getPhotoProducts() != null}"
+                     class="no-photo"
+                     style="width: 100%; height: 180px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-camera" style="font-size: 2rem; color: #ccc;"></i>
+                </div>
+                <div class="ad-price" th:text="${#numbers.formatDecimal(ad.price, 0, 'COMMA', 0, 'POINT')} + ' ₽'">Цена</div>
+            </div>
+            <div class="ad-info">
+                <h3 class="ad-title" th:text="${ad.getName()}">Название</h3>
+                <p class="ad-location" th:text="${ad.getAddress()}">Адрес</p>
+            </div>
+        </div>
+    </section>
+</main>
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/MainSearchPage'">Ovito</div>
+            <p class="footer-desc">Ovito — ваш онлайн-маркетплейс объявлений. Покупайте и продавайте легко!</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/MainSearchPage">Главная</a>
+                <a href="/AddAdsPage">Разместить объявление</a>
+                <a href="/ProfilePage">Профиль</a>
+                <a href="/BasketPage">Корзина</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

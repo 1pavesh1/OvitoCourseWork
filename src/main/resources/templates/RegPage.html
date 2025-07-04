@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Регистрация</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" th:href="@{/styleAuth.css}">
+</head>
+<body>
+<div class="wrapper">
+    <div class="title">
+        Регистрация
+    </div>
+    <form action="/reg" method="POST" th:object="${user}">
+        <div class="form-content">
+            <!-- Общие ошибки -->
+            <div th:if="${error != null}" class="error-message server-error">
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Поле логина -->
+            <div class="input-field">
+                <input type="text" th:field="*{login}" placeholder="Логин" required>
+                <div th:if="${#fields.hasErrors('login')}" class="error-message field-error">
+                    <span th:errors="*{login}"></span>
+                </div>
+            </div>
+
+            <!-- Поле пароля -->
+            <div class="input-field">
+                <input type="password" th:field="*{simplePassword}" placeholder="Пароль" required>
+                <div th:if="${#fields.hasErrors('simplePassword')}" class="error-message field-error">
+                    <span th:errors="*{simplePassword}"></span>
+                </div>
+            </div>
+
+            <!-- Кнопка отправки -->
+            <div class="submit-field">
+                <input type="submit" value="Зарегистрироваться">
+            </div>
+
+            <!-- Ссылка на авторизацию -->
+            <div class="signup-link">
+                Вы уже зарегистрированы? <a href="/AuthPage">Авторизация</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

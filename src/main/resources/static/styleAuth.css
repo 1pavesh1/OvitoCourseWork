@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    place-items: center;
+    background: #f2f2f2;
+}
+
+.wrapper {
+    width: 380px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+}
+
+.wrapper .title {
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 100px;
+    color: #fff;
+    user-select: none;
+    border-radius: 15px 15px 0 0;
+    background: linear-gradient(135deg, #6e48aa, #9d50bb);
+}
+
+.form-content {
+    padding: 20px 30px 30px 30px;
+}
+
+.input-field {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.input-field input {
+    width: 100%;
+    height: 50px;
+    padding: 0 20px;
+    font-size: 17px;
+    border: 1px solid lightgrey;
+    border-radius: 25px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-field input:focus {
+    border-color: #4158d0;
+}
+
+.submit-field {
+    margin-top: 20px;
+}
+
+.submit-field input[type="submit"] {
+    width: 100%;
+    height: 50px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #6e48aa, #9d50bb);
+    transition: all 0.3s ease;
+}
+
+.submit-field input[type="submit"]:active {
+    transform: scale(0.95);
+}
+
+.signup-link {
+    color: #262626;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.signup-link a {
+    color: #4158d0;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #ff3333;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.server-error {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.field-error {
+    padding-left: 20px;
+    margin-top: 5px;
+}

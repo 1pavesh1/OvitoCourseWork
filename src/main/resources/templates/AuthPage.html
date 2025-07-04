@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Авторизация</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" th:href="@{/styleAuth.css}">
+</head>
+<body>
+<div class="wrapper">
+    <div class="title">
+        Авторизация
+    </div>
+    <form action="/login" method="POST" th:if="${param.error == null}">
+        <div class="form-content">
+            <div th:if="${param.error}" class="error-message server-error">
+                Неверный логин или пароль
+            </div>
+
+            <div class="input-field">
+                <input type="text" name="login" placeholder="Логин" required>
+            </div>
+
+            <div class="input-field">
+                <input type="password" name="simplePassword" placeholder="Пароль" required>
+            </div>
+
+            <div class="submit-field">
+                <input type="submit" value="Войти">
+            </div>
+
+            <div class="signup-link">
+                Нет аккаунта? <a href="/RegPage">Зарегистрироваться</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

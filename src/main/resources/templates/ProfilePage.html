@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/styleProfile.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/MainSearchPage'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <!-- Показываем кнопку корзины только для обычных пользователей -->
+                <button th:unless="${user.admin}" onclick="location.href='/BasketPage'" class="nav-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    Корзина
+                </button>
+                <button class="nav-button active" onclick="location.href='/ProfilePage'">
+                    <i class="fas fa-user"></i>
+                    Профиль
+                </button>
+                <!-- Показываем кнопку настроек только для обычных пользователей -->
+                <button th:unless="${user.admin}" class="nav-button" onclick="location.href='/SettingsPage'">
+                    <i class="fas fa-cog"></i>
+                    Настройки аккаунта
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="profile-section">
+        <div class="profile-header">
+            <div class="avatar" th:text="${user.getLogin().substring(0, 1).toUpperCase()}"></div>
+            <div class="profile-info">
+                <h2>
+                    <span th:text="${user.login}"></span>
+                    <span th:if="${user.admin}" style="font-size: 0.8em; color: #6e48aa;">(Администратор)</span>
+                </h2>
+            </div>
+            <div class="profile-actions">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <nav class="profile-nav">
+            <!-- Для администратора -->
+            <a th:if="${user.admin}" th:href="@{/ProfilePage(tab='users')}"
+               th:classappend="${activeTab == 'users'} ? 'active' : ''"
+               class="nav-item">
+                <i class="fas fa-users"></i> Пользователи
+            </a>
+
+            <!-- Для обычных пользователей -->
+            <a th:unless="${user.admin}" th:href="@{/ProfilePage(tab='ads')}"
+               th:classappend="${activeTab == 'ads'} ? 'active' : ''"
+               class="nav-item">
+                <i class="fas fa-list"></i> Мои объявления
+            </a>
+            <a th:unless="${user.admin}" th:href="@{/ProfilePage(tab='orders')}"
+               th:classappend="${activeTab == 'orders'} ? 'active' : ''"
+               class="nav-item">
+                <i class="fas fa-shopping-bag"></i> Мои заказы
+            </a>
+            <a th:unless="${user.admin}" th:href="@{/ProfilePage(tab='sales')}"
+               th:classappend="${activeTab == 'sales'} ? 'active' : ''"
+               class="nav-item">
+                <i class="fas fa-history"></i> История продаж
+            </a>
+            <a th:unless="${user.admin}" th:href="@{/ProfilePage(tab='stats')}"
+               th:classappend="${activeTab == 'stats'} ? 'active' : ''"
+               class="nav-item">
+                <i class="fas fa-chart-pie"></i> Моя статистика
+            </a>
+        </nav>
+
+        <!-- Секция управления пользователями (для администратора) -->
+        <section th:if="${user.admin and activeTab == 'users'}" class="users-container">
+            <h2 class="section-title">Управление пользователями</h2>
+            <div class="users-table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Логин</th>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Телефон</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${users}">
+                        <td th:text="${u.idUser}"></td>
+                        <td th:text="${u.login}"></td>
+                        <td th:text="${u.name} ?: 'Не указано'"></td>
+                        <td th:text="${u.email} ?: 'Не указан'"></td>
+                        <td th:text="${u.phone} ?: 'Не указан'"></td>
+                        <td>
+                            <form th:action="@{/admin/deleteUser}" method="post">
+                                <input type="hidden" name="userId" th:value="${u.idUser}">
+                                <button type="submit" class="delete-btn">
+                                    <i class="fas fa-trash"></i> Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Секция объявлений -->
+        <section th:unless="${user.admin}" th:if="${activeTab == 'ads'}" class="ads-container">
+            <div class="ad-item" th:each="ad : ${adsList}"
+                 th:onclick="'location.href=\'/ads/' + ${ad.idAds} + '\''"
+                 style="cursor: pointer;">
+                <div class="ad-image">
+                    <img th:if="${ad.getPhotoProducts() != null}"
+                         th:src="@{'/ads/image/' + ${ad.idAds}}"
+                         alt="Фото товара"
+                         style="width: 100%; height: 180px; object-fit: cover;">
+                    <div th:unless="${ad.getPhotoProducts() != null}"
+                         class="no-photo"
+                         style="width: 100%; height: 180px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-camera" style="font-size: 2rem; color: #ccc;"></i>
+                    </div>
+                    <div class="ad-price"
+                         th:text="${#numbers.formatDecimal(ad.price, 0, 'COMMA', 0, 'POINT')} + ' ₽'">
+                        5 900 ₽
+                    </div>
+                </div>
+                <div class="ad-info">
+                    <h3 class="ad-title" th:text="${ad.getName()}">Название</h3>
+                    <p class="ad-location" th:text="${ad.getAddress()}">Адрес</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция заказов -->
+        <section th:unless="${user.admin}" th:if="${activeTab == 'orders'}" class="orders-container">
+            <h2 class="section-title">Мои заказы</h2>
+            <div class="order-list">
+                <div class="order-item" th:each="order : ${orders}"
+                     th:onclick="'location.href=\'/order/' + ${order.idOrder} + '\''"
+                     style="cursor: pointer;">
+                    <div class="order-header">
+                        <span class="order-id">Заказ #<span th:text="${order.idOrder}"></span></span>
+                        <span class="order-date" th:text="${#temporals.format(order.dateDelivery, 'dd.MM.yyyy')}">01.01.2023</span>
+                    </div>
+                    <div class="order-summary">
+                        <span class="order-total" th:text="${#numbers.formatDecimal(order.costOrder, 0, 'COMMA', 0, 'POINT')} + ' ₽'">5 000 ₽</span>
+                        <span class="order-status">В процессе доставки</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция истории продаж -->
+        <section th:unless="${user.admin}" th:if="${activeTab == 'sales'}" class="sales-container">
+            <h2 class="section-title">История продаж</h2>
+            <div class="sales-list">
+                <div class="sale-item" th:each="sale : ${sales}"
+                     style="cursor: pointer;">
+                    <div class="sale-header">
+                        <span class="sale-id">Продажа #<span th:text="${sale.getIdHistorySales()}"></span></span>
+                        <span class="sale-date" th:text="${#temporals.format(sale.getDateSale(), 'dd.MM.yyyy')}">01.01.2023</span>
+                    </div>
+                    <div class="sale-summary">
+                        <h3 th:text="${sale.getName()}">Название товара</h3>
+                        <p>Цена: <span th:text="${#numbers.formatDecimal(sale.getPrice(), 0, 'COMMA', 0, 'POINT')} + ' ₽'">5 000 ₽</span></p>
+                        <p>Количество: <span th:text="${sale.getCount()}">1</span> шт.</p>
+                    </div>
+                </div>
+            </div>
+        </section>  <!-- Добавлен закрывающий тег -->
+
+        <section th:unless="${user.admin}" th:if="${activeTab == 'stats'}" class="stats-container">
+            <h2 class="section-title">Статистика</h2>
+
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <h3>Распределение по категориям</h3>
+                    <div class="chart-container">
+                        <!-- SVG диаграмма будет сгенерирована сервером -->
+                        <div th:utext="${categoryChart}"></div>
+                    </div>
+                    <div class="stats-summary">
+                        <div class="summary-item" th:each="entry : ${categoryStats}">
+                            <span class="category-name" th:text="${entry.key}">Категория</span>
+                            <span class="category-count" th:text="${entry.value}">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3>Статус объявлений</h3>
+                    <div class="chart-container">
+                        <!-- SVG диаграмма будет сгенерирована сервером -->
+                        <div th:utext="${statusChart}"></div>
+                    </div>
+                    <div class="stats-summary">
+                        <div class="summary-item">
+                            <span class="status-name">В продаже</span>
+                            <span class="status-count" th:text="${activeCount}">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="status-name">Продано</span>
+                            <span class="status-count" th:text="${soldCount}">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>  <!-- Закрывающий тег для profile-section -->
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/MainSearchPage'">Ovito</div>
+            <p class="footer-desc">Ovito — ваш онлайн-маркетплейс объявлений. Покупайте и продавайте легко!</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/MainSearchPage">Главная</a>
+                <a href="/AddAdsPage">Разместить объявление</a>
+                <a href="/ProfilePage">Профиль</a>
+                <a href="/BasketPage">Корзина</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

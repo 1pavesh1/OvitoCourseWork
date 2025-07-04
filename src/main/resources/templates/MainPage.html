@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ovito - Главная</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{styleMainPage.css}">
+</head>
+<body class="main-page">
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <button onclick="location.href='/AuthPage'" class="nav-button auth-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Войти
+                </button>
+                <button onclick="location.href='/RegPage'" class="nav-button reg-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Регистрация
+                </button>
+            </div>
+        </div>
+        <div class="header-content">
+            <h1>Добро пожаловать в Ovito</h1>
+            <p>Ваш маркетплейс для покупки и продажи товаров</p>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero-section">
+        <div class="hero-content">
+            <h2 th:text="${courseWorkTitle}">Курсовая работа</h2>
+            <p class="subtitle">по дисциплине "Управление данными"</p>
+            <div class="hero-buttons">
+                <button onclick="location.href='#project'" class="hero-btn project-btn">
+                    <i class="fas fa-project-diagram"></i> О проекте
+                </button>
+                <button onclick="location.href='#database'" class="hero-btn database-btn">
+                    <i class="fas fa-database"></i> База данных
+                </button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img th:src="@{/images/database-hero.png}" alt="Database Illustration">
+        </div>
+    </section>
+
+    <section id="project" class="project-section">
+        <div class="section-header">
+            <i class="fas fa-project-diagram"></i>
+            <h2>О проекте</h2>
+        </div>
+        <div class="project-description">
+            <p th:text="${courseWorkDescription}">Описание работы...</p>
+        </div>
+        <div class="project-features">
+            <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Пользователи</h3>
+                <p>Регистрация, авторизация, личный кабинет</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-ad"></i>
+                <h3>Объявления</h3>
+                <p>Размещение, редактирование, поиск товаров</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Корзина</h3>
+                <p>Добавление товаров, оформление заказов</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="database" class="database-section">
+        <div class="section-header">
+            <i class="fas fa-database"></i>
+            <h2>База данных AvitoDB</h2>
+        </div>
+        <div class="db-info">
+            <p th:text="${dbInfo}">Информация о базе данных...</p>
+        </div>
+        <div class="schema-container">
+            <div class="schema-image">
+                <img th:src="@{/images/db-schema.png}" alt="Database Schema">
+            </div>
+            <div class="schema-description">
+                <h3>Структура базы данных</h3>
+                <pre th:text="${dbSchema}">Схема базы данных...</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Готовы начать?</h2>
+        <p>Зарегистрируйтесь или войдите в систему</p>
+        <div class="cta-buttons">
+            <button onclick="location.href='/RegPage'" class="cta-btn reg-btn">
+                <i class="fas fa-user-plus"></i> Регистрация
+            </button>
+            <button onclick="location.href='/AuthPage'" class="cta-btn auth-btn">
+                <i class="fas fa-sign-in-alt"></i> Войти
+            </button>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/'">Ovito</div>
+            <p class="footer-desc">Курсовая работа по УД</p>
+            <p class="footer-author">Студент: Шеварихин Павел<br>Группа: 22-КТ</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/">Главная</a>
+                <a href="/AuthPage">Авторизация</a>
+                <a href="/RegPage">Регистрация</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

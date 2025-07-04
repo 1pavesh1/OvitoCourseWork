@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/styleBasket.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/MainSearchPage'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <button onclick="location.href='/BasketPage'" class="nav-button active">
+                    <i class="fas fa-shopping-cart"></i>
+                    Корзина
+                </button>
+                <button class="nav-button" onclick="location.href='/ProfilePage'">
+                    <i class="fas fa-user"></i>
+                    Профиль
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="basket-section">
+        <h1 class="basket-title">Корзина</h1>
+
+        <!-- Сообщение об ошибке -->
+        <div th:if="${error != null}" class="error-message">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Блок для пустой корзины -->
+        <div class="empty-basket" th:unless="${basketItems != null and !basketItems.isEmpty()}">
+            <div class="empty-basket-content">
+                <p class="empty-message">В корзине пока пусто</p>
+                <p class="empty-suggestion">Загляните на главную — собрали там товары, которые могут вам понравиться</p>
+                <button onclick="location.href='/MainSearchPage'" class="go-to-main-btn">
+                    Перейти на главную
+                </button>
+            </div>
+        </div>
+
+        <div class="basket-content" th:if="${basketItems != null and !basketItems.isEmpty()}">
+            <div class="product-info">
+                <div th:each="order, iterStat : ${basketItems}">
+                    <a th:href="@{'/ads/' + ${adsList[__${iterStat.index}__].idAds}}" class="basket-item-link" style="text-decoration: none; color: inherit;">
+                        <div class="basket-item">
+                            <div class="item-header">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="selectedItems" th:value="${order.idOrder}">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <form th:action="@{/basket/delete/{id}(id=${order.idOrder})}" method="post">
+                                    <button type="submit" class="delete-btn" title="Удалить товар">
+                                        <i class="fas fa-trash"></i> Удалить
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="item-content">
+                                <div class="item-image"
+                                     th:style="|background-image: url('/ads/images/${adsList[__${iterStat.index}__].idAds}/0')|">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-title" th:text="${adsList[__${iterStat.index}__].name}">Название товара</div>
+                                    <div class="item-description" th:text="${adsList[__${iterStat.index}__].description}">Описание товара</div>
+                                    <div class="item-controls">
+                                        <div class="quantity-info">
+                                            <span class="quantity">1 шт.</span>
+                                            <span class="quantity-hint" th:text="'В наличии: ' + ${adsList[__${iterStat.index}__].count}">В наличии: N</span>
+                                        </div>
+                                        <div class="item-prices">
+                            <span class="current-price" th:text="${#numbers.formatDecimal(adsList[__${iterStat.index}__].price, 0, 'COMMA', 0, 'POINT')} + ' ₽'">
+                                Цена
+                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Правая колонка - информация о заказе -->
+            <div class="order-info">
+                <div class="delivery-summary">
+                    <div class="info-title">Доставка по адресу</div>
+                    <div class="info-value" th:text="${userAddress}">Адрес пользователя</div>
+                </div>
+
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span th:text="'Товары, ' + ${basketItems.size()} + ' шт.'">Товары, X шт.</span>
+                        <span th:text="${#numbers.formatDecimal(totalSum, 0, 'COMMA', 0, 'POINT')} + ' ₽'">Сумма</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Стоимость доставки</span>
+                        <span th:text="${#numbers.formatDecimal(deliveryCost, 0, 'COMMA', 0, 'POINT')} + ' ₽'">Доставка</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Итого</span>
+                        <span th:text="${#numbers.formatDecimal(finalSum, 0, 'COMMA', 0, 'POINT')} + ' ₽'">Итого</span>
+                    </div>
+                </div>
+
+                <form th:action="@{/basket/order}" method="post">
+                    <!-- Чекбоксы для каждого товара -->
+                    <div th:each="order : ${basketItems}">
+                        <input type="checkbox" name="selectedItems" th:value="${order.idOrder}" checked style="display: none;">
+                    </div>
+
+                    <div class="agreement-checkbox">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="agreement" required>
+                            <span class="checkmark"></span>
+                            <span class="agreement-text">Согласен с правилами пользования торговой площадкой и возврата</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="order-btn">Заказать</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/MainSearchPage'">Ovito</div>
+            <p class="footer-desc">Ovito — ваш онлайн-маркетплейс объявлений. Покупайте и продавайте легко!</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/MainSearchPage">Главная</a>
+                <a href="/AddAdsPage">Разместить объявление</a>
+                <a href="/ProfilePage">Профиль</a>
+                <a href="/BasketPage">Корзина</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

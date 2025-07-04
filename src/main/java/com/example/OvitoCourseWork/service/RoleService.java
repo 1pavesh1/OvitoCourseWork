@@ -1,4 +1,6 @@
 package com.example.OvitoCourseWork.service;
 
-public class RoleService {
+public class RoleService
+{
+
 }

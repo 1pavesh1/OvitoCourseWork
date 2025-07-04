@@ -1,0 +1,318 @@
+@import url("styleMain.css");
+
+/* Основные стили страницы заказа */
+.order-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+.order-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.error-message {
+    color: #ff4b2b;
+    background-color: #ffecec;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #ffb8b8;
+}
+
+/* Контейнер заказа */
+.order-content {
+    display: flex;
+    gap: 30px;
+}
+
+/* Левая часть - товары */
+.product-info {
+    flex: 2;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Элемент товара */
+.order-item {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.item-content {
+    display: flex;
+    gap: 15px;
+}
+
+.item-image {
+    width: 120px;
+    height: 120px;
+    background-color: #f5f5f5;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.item-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.quantity-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.quantity {
+    font-size: 14px;
+}
+
+.item-prices {
+    text-align: right;
+}
+
+.current-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Правая часть - форма заказа */
+.order-info {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    height: fit-content;
+}
+
+.order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-input, .form-select {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: #8a2be2;
+}
+
+/* Способы оплаты */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payment-method:hover {
+    border-color: #8a2be2;
+    background-color: #f9f5ff;
+}
+
+.payment-radio {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #8a2be2;
+    border-radius: 50%;
+    position: relative;
+}
+
+.payment-method input[type="radio"] {
+    display: none;
+}
+
+.payment-method input[type="radio"]:checked + .payment-radio::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #8a2be2;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+}
+
+.payment-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* Итоговая информация */
+.order-summary {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+/* Чекбокс согласия */
+.agreement-checkbox {
+    margin-bottom: 20px;
+}
+
+.checkbox-container {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #f5f5f5;
+    border: 2px solid #8a2be2;
+    border-radius: 4px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #f3e6ff;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: #8a2be2;
+    border-color: #8a2be2;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.agreement-text {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Кнопка подтверждения заказа */
+.order-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #6e48aa;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.order-btn:hover {
+    background-color: #5d3a92;
+}

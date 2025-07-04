@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки аккаунта</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/Logo.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/styleSettings.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div onclick="location.href='/MainSearchPage'" class="logo">Ovito</div>
+            <div class="user-actions">
+                <button onclick="location.href='/BasketPage'" class="nav-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Корзина</span>
+                </button>
+                <button class="nav-button" onclick="location.href='/ProfilePage'">
+                    <i class="fas fa-user"></i>
+                    <span>Профиль</span>
+                </button>
+                <button class="nav-button active" onclick="location.href='/SettingsPage'">
+                    <i class="fas fa-cog"></i>
+                    <span>Настройки аккаунта</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="settings-section">
+        <div class="settings-header">
+            <h1><i class="fas fa-cog" style="margin-right: 10px;"></i> Настройки аккаунта</h1>
+        </div>
+
+        <div th:if="${error != null}" class="error-message">
+            <span th:text="${error}"></span>
+        </div>
+
+        <form id="userSettingsForm" action="/updateDataUser" method="POST" th:object="${user}">
+            <div class="form-group">
+                <label><i class="fas fa-user-circle" style="margin-right: 8px;"></i>Логин</label>
+                <input type="text" name="login" required placeholder="Введите ваш логин" th:value="${user.getLogin()}">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-user" style="margin-right: 8px;"></i>Имя</label>
+                <input type="text" name="name" placeholder="Введите ваше имя" th:value="${user.getName()}">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-user" style="margin-right: 8px;"></i>Фамилия</label>
+                <input type="text" name="lastName" placeholder="Введите вашу фамилию" th:value="${user.getLastName()}" />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-phone" style="margin-right: 8px;"></i>Телефон</label>
+                <input type="tel" name="phone" placeholder="+7-(999)-999-99-99"
+                       th:value="${user.phone}" required>
+                <div th:if="${#fields.hasErrors('phone')}" class="error-message">
+                    <span th:errors="*{phone}"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-envelope" style="margin-right: 8px;"></i>Почта</label>
+                <input type="email" name="email" placeholder="Введите вашу почту" th:value="${user.getEmail()}">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i>Адрес</label>
+                <input type="text" name="address" placeholder="ул. Ленина, г. Москва, д. 10, кв. 25"
+                       th:value="${user.address}" required>
+                <div th:if="${#fields.hasErrors('address')}" class="error-message">
+                    <span th:errors="*{address}"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="save-btn">
+                <i class="fas fa-save" style="margin-right: 8px;"></i> Обновить данные
+            </button>
+        </form>
+
+        <div id="statusMessage" class="status-message"></div>
+    </section>
+    <div class="profile-actions">
+        <form action="/deleteAccount" method="POST" style="display:inline;">
+            <button type="submit" class="delete-btn" onclick="return confirm('Вы уверены, что хотите удалить аккаунт?');">
+                <i class="fas fa-user-slash"></i> Удалить аккаунт
+            </button>
+        </form>
+    </div>
+</main>
+<footer>
+    <div class="footer-container">
+        <div class="footer-left">
+            <div class="footer-logo" onclick="location.href='/MainSearchPage'">Ovito</div>
+            <p class="footer-desc">Ovito — ваш онлайн-маркетплейс объявлений. Покупайте и продавайте легко!</p>
+        </div>
+        <div class="footer-center">
+            <div class="footer-links">
+                <a href="/MainSearchPage">Главная</a>
+                <a href="/AddAdsPage">Разместить объявление</a>
+                <a href="/ProfilePage">Профиль</a>
+                <a href="/BasketPage">Корзина</a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-social">
+                <a href="#" title="VK"><i class="fab fa-vk"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Ovito. Все права защищены.
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
